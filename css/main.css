@@ -34,3 +34,7 @@ button {
     width: 200px;
     height: 120px;
 }
+
+.light {
+    opacity: 0.6;
+}

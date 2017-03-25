@@ -1,93 +1,92 @@
 const colors = ["red", "blue", "yellow", "green"];
 const speed = { "0": 1000, "1": 700, "2": 500 };
-var plSeq = [];
+var cpuCount = 0;
+var playerCount = 0;
 var sequence = [];
-var playerTurn = true;
+var interval;
+var playerTurn = false;
 var sound1 = new Audio("sound/simonSound1.mp3");
 var sound2 = new Audio("sound/simonSound2.mp3");
 var sound3 = new Audio("sound/simonSound3.mp3");
 var sound4 = new Audio("sound/simonSound4.mp3");
 var button = document.querySelectorAll('.btn');
+var start = document.querySelector(".start");
+
+start.addEventListener("click", cpuSequence);
 // updating player sequence when I hit the button
 for (var i = 0; i < 4; i++) {
-    button[i].addEventListener("click", function(e) {
+    button[i].addEventListener("mousedown", function(e) {
         let color = this.id;
-        console.log(color);
         playerSequence(color);
     });
 }
-
+// player sequence update
 function playerSequence(color) {
     if (playerTurn) {
-        if (plSeq.length <= sequence.length) {
-            plSeq.push(color);
-            console.log(plSeq);
-            lightButton(color);
+        playerCount++;
+        // if (plSeq.length <= sequence.length) {
+        plSeq.push(color);
+        lightButton(color);
+        if (!compare(playerCount - 1, color)) {
+            wrongButton();
+        } else if (playerCount === sequence.length) {
+            playerTurn = false;
+            cpuSequence();
         }
     }
 }
-// choosing a random color when the computer plays
-function randomColor() {
-    return colors[Math.floor(Math.random() * 4)];
+// computer sequence starting
+function cpuSequence() {
+    if (!playerTurn) {
+        cpuCount = 0;
+        var randomColor = colors[Math.floor(Math.random() * 4)];
+        sequence.push(randomColor);
+        console.log(sequence.length);
+        interval = setInterval(function() {
+            cpuCount++;
+            if (cpuCount === sequence.length) {
+                playerCount = 0;
+                clearInterval(interval);
+                playerTurn = true;
+            }
+            lightButton(sequence[cpuCount - 1]);
+        }, 1000);
+    }
 }
 
-function cpuSequence(count) {
-    sequence = [];
-    for (var i = 0; i < count; i++) {
-        let color = randomColor();
-        sequence.push(color);
-        lightButton(color);
-    }
-    if (count === sequence.length) {
-        playerTurn = true;
-        clearInterval();
-    }
-}
-
-function startSequence() {
-    // var count = 0;
-    // var sequenceInterval = setInterval(function() {
-    // lightButton(count);
-    count++;
-    if (count === sequence.length) {
-        clearInterval(sequenceInterval);
-    }
-    // }, 1500);
-}
 // playing a sound and lighting the button
 function lightButton(color) {
-    switch (color) {
-        case "green":
-            sound1.play();
-            document.getElementById(color).style.opacity = "1";
-            break;
-        case "green":
-            sound1.play();
-            document.getElementById(color).style.opacity = "1";
-            break;
-        case "green":
-            sound1.play();
-            document.getElementById(color).style.opacity = "1";
-            break;
-        case "green":
-            sound1.play();
-            document.getElementById(color).style.opacity = "1";
-            break;
+    var playButton = document.getElementById(color);
+    if (color === "green") {
+        sound1.play();
+    } else if (color === "blue") {
+        sound2.play();
+    } else if (color === "yellow") {
+        sound3.play();
+    } else if (color === "red") {
+        sound4.play();
     }
-    // clear the button opacity
-    setTimeout(function() {
-
-    }, speed);
+    playButton.classList.add("light");
+}
+// comparing sequences
+function compare(count, color) {
+    if (sequence[count] === color) {
+        return true;
+    }
+    return false;
 }
 
-for (var btn = 0; btn < 4; btn++) {
-    var button = document.ge
+// clear button lighting
+function clearButton() {
+    for (var i = 0; i < 4; i++) {
+        button[i].classList.remove("light");
+    }
 }
 
-
-// for (var i = 0; i < sequence.length; i++) {
-//     document.getElementById(sequence[i]).style.opacity = "1";
-//     setTimeout(function() {
-//         document.getElementById(sequence[i]).style.opacity = "0.6";
-//     });
-// }
+// wrong button press
+function wrongButton() {
+    plSeq = [];
+    playerTurn = false;
+    alert("wrong button");
+    // cpuSequence();
+}
