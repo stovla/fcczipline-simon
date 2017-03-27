@@ -1,72 +1,180 @@
+// one issue to be solved is when you start clicking on start like crazy
+// it will not work anymore, you have to reset the page
 const colors = ["red", "blue", "yellow", "green"];
-const speed = { "0": 1000, "1": 700, "2": 500 };
-var cpuCount = 0;
-var playerCount = 0;
+const sounds = {
+    "red": new Audio("sound/simonSound1.mp3"),
+    "blue": new Audio("sound/simonSound2.mp3"),
+    "green": new Audio("sound/simonSound3.mp3"),
+    "yellow": new Audio("sound/simonSound4.mp3")
+}
+const winSound = new Audio("sound/tada.mp3");
+const failSound = new Audio("sound/slap.mp3");
+const onButton = document.querySelector("#onOff");
+const button = document.querySelectorAll('.btn');
+const startButton = document.querySelector(".start");
+const strictButton = document.querySelector("#strict");
+var speed;
+var game;
+var playerCount;
 var sequence = [];
+var playerTurn;
 var interval;
-var playerTurn = false;
-var sound1 = new Audio("sound/simonSound1.mp3");
-var sound2 = new Audio("sound/simonSound2.mp3");
-var sound3 = new Audio("sound/simonSound3.mp3");
-var sound4 = new Audio("sound/simonSound4.mp3");
-var button = document.querySelectorAll('.btn');
-var start = document.querySelector(".start");
+isStrict = false;
 
-start.addEventListener("click", cpuSequence);
+// game speed
+function gameSpeed() {
+    let speedCount = sequence.length;
+    if (speedCount < 5) {
+        return speed = 1000;
+    } else if (speedCount < 9) {
+        return speed = 850;
+    } else if (speedCount < 13) {
+        return speed = 700;
+    } else if (speedCount < 21) {
+        return speed = 500;
+    }
+}
+
+// init the values
+function init() {
+    sequence = [];
+    playerCount = 0;
+    playerTurn = false;
+    interval = null;
+    isStrict = false;
+}
+
+// starting and ending a game with on and off button
+onButton.addEventListener("click", function() {
+    if (game) {
+        disableAllButtons();
+        init();
+    } else {
+        startButton.removeAttribute("disabled", true);
+        strictButton.removeAttribute("disabled", true);
+    }
+    game = !game;
+    displayCounter();
+});
+
+// starting a sequence
+startButton.addEventListener("click", fromScratch);
+
+// function starting from scratch
+function fromScratch() {
+    init();
+    start();
+}
+// starting and restarting the sequence from 1
+function start() {
+    if (game) {
+        clearInterval(interval);
+        cpuSequence();
+    }
+}
+// turn on and off strict mode 
+strictButton.addEventListener("click", function() {
+    return isStrict = !isStrict;
+});
+
+// disabling and enabling buttons
+function disableAllButtons() {
+    strictButton.setAttribute("disabled", true);
+    startButton.setAttribute("disabled", true);
+    disableButtons();
+}
+
+function enableButtons() {
+    for (var i = 0; i < 4; i++) {
+        button[i].removeAttribute("disabled", true);
+    }
+}
+
+function disableButtons() {
+    for (var i = 0; i < 4; i++) {
+        button[i].setAttribute("disabled", true);
+    }
+}
+disableAllButtons();
+
 // updating player sequence when I hit the button
 for (var i = 0; i < 4; i++) {
-    button[i].addEventListener("mousedown", function(e) {
-        let color = this.id;
-        playerSequence(color);
+    button[i].addEventListener("click", function(e) {
+        if (playerTurn) {
+            let color = this.id;
+            playerSequence(color);
+        }
     });
 }
+
 // player sequence update
 function playerSequence(color) {
     if (playerTurn) {
         playerCount++;
-        // if (plSeq.length <= sequence.length) {
-        plSeq.push(color);
-        lightButton(color);
         if (!compare(playerCount - 1, color)) {
             wrongButton();
-        } else if (playerCount === sequence.length) {
-            playerTurn = false;
-            cpuSequence();
+            if (!isStrict) {
+                return cpuButtonLight();
+            } else {
+                return fromScratch();
+            }
+        }
+        lightButton(color);
+        if (playerCount === sequence.length) {
+            if (playerCount < 20) {
+                playerTurn = false;
+                return cpuSequence();
+            } else {
+                winSound.play();
+                return fromScratch();
+            }
         }
     }
 }
 // computer sequence starting
 function cpuSequence() {
-    if (!playerTurn) {
-        cpuCount = 0;
-        var randomColor = colors[Math.floor(Math.random() * 4)];
-        sequence.push(randomColor);
-        console.log(sequence.length);
+    var randomColor = colors[Math.floor(Math.random() * 4)];
+    sequence.push(randomColor);
+    console.log(sequence);
+    console.log(randomColor);
+    cpuButtonLight();
+}
+// light the sequence
+function cpuButtonLight() {
+    disableButtons();
+    var index = 0;
+    setTimeout(function() {
         interval = setInterval(function() {
-            cpuCount++;
-            if (cpuCount === sequence.length) {
+            displayCounter();
+            clearButton();
+            if (index !== sequence.length) {
+                lightButton(sequence[index]);
+                index++;
+            } else {
+                for (var k = 0; k < 4; k++) {
+                    button[k].removeAttribute("disabled", true);
+                }
+                clearButton();
+                enableButtons();
                 playerCount = 0;
-                clearInterval(interval);
                 playerTurn = true;
+                clearInterval(interval);
             }
-            lightButton(sequence[cpuCount - 1]);
-        }, 1000);
-    }
+        }, gameSpeed());
+    }, 1000);
 }
 
 // playing a sound and lighting the button
 function lightButton(color) {
-    var playButton = document.getElementById(color);
-    if (color === "green") {
-        sound1.play();
-    } else if (color === "blue") {
-        sound2.play();
-    } else if (color === "yellow") {
-        sound3.play();
-    } else if (color === "red") {
-        sound4.play();
+    for (var i in sounds) {
+        sounds[i].pause();
+        sounds[i].currentTime = 0;
     }
-    playButton.classList.add("light");
+    sounds[color].play();
+    var playButton = document.getElementById(color);
+    if (!playerTurn) {
+        playButton.classList.add("light");
+    }
 }
 // comparing sequences
 function compare(count, color) {
@@ -85,8 +193,24 @@ function clearButton() {
 
 // wrong button press
 function wrongButton() {
-    plSeq = [];
     playerTurn = false;
-    alert("wrong button");
-    // cpuSequence();
+    failSound.play();
+}
+// counter display
+function displayCounter() {
+    let ct = document.getElementById("counter");
+    let num = sequence.length;
+    if (game) {
+        if (num > 9) {
+            ct.innerText = num;
+        } else {
+            ct.innerText = "0" + num;
+        }
+    } else {
+        ct.innerText = "- -";
+    }
+}
+// display winner
+function winner() {
+    winSound.play();
 }
