@@ -6,48 +6,118 @@
 
 body {
     font-family: 'Gloria Hallelujah', cursive;
+    background: darkgrey;
+}
+
+header {
+    text-align: center;
+    padding: 25px;
+    font-size: 1.6em;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=7, Direction=135, Color=#000000)";
+    /*IE 8*/
+    text-shadow: 2px 2px 0 #000000;
+    /* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
+    filter: progid: DXImageTransform.Microsoft.Shadow(Strength=7, Direction=135, Color=#000000);
+    /*IE 5.5-7*/
 }
 
 .main-app {
     display: flex;
     align-self: center;
-    max-width: 1000px;
+    max-width: 500px;
     align-content: stretch;
     margin: 0 auto;
     height: auto;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-#red {
-    background: darkred;
-}
-
-#green {
-    background: darkgreen;
-}
-
-#yellow {
-    background: darkgoldenrod;
-}
-
-#blue {
-    background: darkblue;
-}
-
-button {
+.main-app>* {
+    text-shadow: 2px 2px 0.5px #000000;
+    margin: 8px;
     font-family: 'Gloria Hallelujah', cursive;
-    flex: 1 1 50%;
+}
+
+.btn {
+    flex: 50%;
     width: 200px;
     height: 120px;
+    font-size: 3em;
 }
 
-button:active,
-.light {
-    opacity: 0.7;
+#onOff,
+#start,
+#strict,
+#counter {
+    background: #fff;
+    font-size: 1.5em;
+    border: 10px solid black;
+    border-radius: 50px;
+    flex: 1 1 30%
+}
+
+#onOff {
+    /*background: #2e8b57;*/
+}
+
+button[data-color="green"] {
+    border: 15px solid seagreen;
+    color: seagreen;
+    flex: 2;
+}
+
+button[data-color="red"] {
+    border: 15px solid red;
+    color: red;
+    flex: 2;
+}
+
+button[data-color="yellow"] {
+    border: 15px solid yellow;
+    color: yellow;
+}
+
+button[data-color="blue"] {
+    border: 15px solid blue;
+    color: blue;
+}
+
+#blue,
+button[data-color="blue"]:hover {
+    background: blue;
+    color: white;
+}
+
+#yellow,
+button[data-color="yellow"]:hover {
+    background: yellow;
+    color: white;
+}
+
+#green,
+button[data-color="green"]:hover {
+    background: seagreen;
+    color: white;
+}
+
+#red,
+button[data-color="red"]:hover {
+    background: red;
+    color: white;
 }
 
 #counter {
-    padding: 5px 10px;
-    background: black;
-    color: white;
+    flex: 300px;
+    margin: 8px 35%;
+    text-align: center;
+    letter-spacing: 6px;
+    /*flex: 1 1 300px;*/
+}
+
+@media all and (max-width:480px) {
+    #onOff,
+    #start,
+    #strict {
+        flex: 1 1 25%;
+    }
 }

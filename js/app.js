@@ -11,7 +11,7 @@ const winSound = new Audio("sound/tada.mp3");
 const failSound = new Audio("sound/slap.mp3");
 const onButton = document.querySelector("#onOff");
 const button = document.querySelectorAll('.btn');
-const startButton = document.querySelector(".start");
+const startButton = document.querySelector("#start");
 const strictButton = document.querySelector("#strict");
 var speed;
 var game;
@@ -25,13 +25,13 @@ isStrict = false;
 function gameSpeed() {
     let speedCount = sequence.length;
     if (speedCount < 5) {
-        return speed = 1000;
+        return 1000;
     } else if (speedCount < 9) {
-        return speed = 850;
+        return 850;
     } else if (speedCount < 13) {
-        return speed = 700;
+        return 700;
     } else if (speedCount < 21) {
-        return speed = 500;
+        return 500;
     }
 }
 
@@ -46,10 +46,14 @@ function init() {
 
 // starting and ending a game with on and off button
 onButton.addEventListener("click", function() {
+    this.innerText = "ON";
+    this.style.background = "#fff"; ///********set background for the buttons
     if (game) {
         disableAllButtons();
         init();
     } else {
+        this.innerText = "OFF"; ///********set background for the buttons
+        this.style.background = "#2e8b57";
         startButton.removeAttribute("disabled", true);
         strictButton.removeAttribute("disabled", true);
     }
@@ -58,7 +62,7 @@ onButton.addEventListener("click", function() {
 });
 
 // starting a sequence
-startButton.addEventListener("click", fromScratch);
+startButton.addEventListener("click", fromScratch); ///********set background for the buttons
 
 // function starting from scratch
 function fromScratch() {
@@ -74,7 +78,12 @@ function start() {
 }
 // turn on and off strict mode 
 strictButton.addEventListener("click", function() {
-    return isStrict = !isStrict;
+    isStrict = !isStrict;
+    if (isStrict) {
+        this.style.background = "#F00"; ///********set background for the buttons
+    } else {
+        this.style.background = "";
+    }
 });
 
 // disabling and enabling buttons
@@ -101,7 +110,8 @@ disableAllButtons();
 for (var i = 0; i < 4; i++) {
     button[i].addEventListener("click", function(e) {
         if (playerTurn) {
-            let color = this.id;
+            let color = this.getAttribute("data-color");
+            console.log(color);
             playerSequence(color);
         }
     });
@@ -171,9 +181,9 @@ function lightButton(color) {
         sounds[i].currentTime = 0;
     }
     sounds[color].play();
-    var playButton = document.getElementById(color);
+    var playButton = document.querySelector("." + color);
     if (!playerTurn) {
-        playButton.classList.add("light");
+        playButton.id = color;
     }
 }
 // comparing sequences
@@ -187,7 +197,7 @@ function compare(count, color) {
 // clear button lighting
 function clearButton() {
     for (var i = 0; i < 4; i++) {
-        button[i].classList.remove("light");
+        button[i].id = "";
     }
 }
 
@@ -199,7 +209,7 @@ function wrongButton() {
 // counter display
 function displayCounter() {
     let ct = document.getElementById("counter");
-    let num = sequence.length;
+    let num = String(sequence.length);
     if (game) {
         if (num > 9) {
             ct.innerText = num;
@@ -207,7 +217,7 @@ function displayCounter() {
             ct.innerText = "0" + num;
         }
     } else {
-        ct.innerText = "- -";
+        ct.innerText = "--";
     }
 }
 // display winner
