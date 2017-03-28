@@ -29,7 +29,7 @@ function gameSpeed() {
     } else if (speedCount < 9) {
         return 850;
     } else if (speedCount < 13) {
-        return 700;
+        return 650;
     } else if (speedCount < 21) {
         return 500;
     }
@@ -46,14 +46,13 @@ function init() {
 
 // starting and ending a game with on and off button
 onButton.addEventListener("click", function() {
-    this.innerText = "ON";
-    this.style.background = "#fff"; ///********set background for the buttons
+    this.innerText = "Turn ON";
+    startButton.style.color = "#fff";
     if (game) {
         disableAllButtons();
         init();
     } else {
-        this.innerText = "OFF"; ///********set background for the buttons
-        this.style.background = "#2e8b57";
+        this.innerText = "Turn OFF";
         startButton.removeAttribute("disabled", true);
         strictButton.removeAttribute("disabled", true);
     }
@@ -62,7 +61,12 @@ onButton.addEventListener("click", function() {
 });
 
 // starting a sequence
-startButton.addEventListener("click", fromScratch); ///********set background for the buttons
+startButton.addEventListener("click", function() {
+    if (game) {
+        this.style.color = "#00ff00";
+    }
+    fromScratch();
+}); ///********set background for the buttons
 
 // function starting from scratch
 function fromScratch() {
@@ -80,9 +84,9 @@ function start() {
 strictButton.addEventListener("click", function() {
     isStrict = !isStrict;
     if (isStrict) {
-        this.style.background = "#F00"; ///********set background for the buttons
+        this.style.color = "#F00"; ///********set background for the buttons
     } else {
-        this.style.background = "";
+        this.style.color = "#FFF";
     }
 });
 
@@ -111,7 +115,6 @@ for (var i = 0; i < 4; i++) {
     button[i].addEventListener("click", function(e) {
         if (playerTurn) {
             let color = this.getAttribute("data-color");
-            console.log(color);
             playerSequence(color);
         }
     });
@@ -145,8 +148,6 @@ function playerSequence(color) {
 function cpuSequence() {
     var randomColor = colors[Math.floor(Math.random() * 4)];
     sequence.push(randomColor);
-    console.log(sequence);
-    console.log(randomColor);
     cpuButtonLight();
 }
 // light the sequence

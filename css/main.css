@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Gloria Hallelujah', cursive;
-    background: darkgrey;
+    background: #4C8080;
 }
 
 header {
@@ -19,6 +19,11 @@ header {
     /* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
     filter: progid: DXImageTransform.Microsoft.Shadow(Strength=7, Direction=135, Color=#000000);
     /*IE 5.5-7*/
+    color: #ffe4c4;
+}
+
+img {
+    width: 20px;
 }
 
 .main-app {
@@ -33,7 +38,7 @@ header {
 }
 
 .main-app>* {
-    text-shadow: 2px 2px 0.5px #000000;
+    color: white;
     margin: 8px;
     font-family: 'Gloria Hallelujah', cursive;
 }
@@ -43,26 +48,23 @@ header {
     width: 200px;
     height: 120px;
     font-size: 3em;
+    background: beige;
 }
 
 #onOff,
 #start,
 #strict,
 #counter {
-    background: #fff;
+    background: #4C8080;
     font-size: 1.5em;
-    border: 10px solid black;
+    border: 10px solid beige;
     border-radius: 50px;
     flex: 1 1 30%
 }
 
-#onOff {
-    /*background: #2e8b57;*/
-}
-
 button[data-color="green"] {
-    border: 15px solid seagreen;
-    color: seagreen;
+    border: 15px solid darkgreen;
+    color: darkgreen;
     flex: 2;
 }
 
@@ -73,8 +75,8 @@ button[data-color="red"] {
 }
 
 button[data-color="yellow"] {
-    border: 15px solid yellow;
-    color: yellow;
+    border: 15px solid darkorange;
+    color: darkorange;
 }
 
 button[data-color="blue"] {
@@ -85,25 +87,25 @@ button[data-color="blue"] {
 #blue,
 button[data-color="blue"]:hover {
     background: blue;
-    color: white;
+    color: #000;
 }
 
 #yellow,
 button[data-color="yellow"]:hover {
-    background: yellow;
-    color: white;
+    background: darkorange;
+    color: #000;
 }
 
 #green,
 button[data-color="green"]:hover {
-    background: seagreen;
-    color: white;
+    background: darkgreen;
+    color: #000;
 }
 
 #red,
 button[data-color="red"]:hover {
     background: red;
-    color: white;
+    color: #000;
 }
 
 #counter {
