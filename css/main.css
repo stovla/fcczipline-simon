@@ -46,7 +46,7 @@ img {
 .btn {
     flex: 50%;
     width: 200px;
-    height: 120px;
+    max-height: 120px;
     font-size: 3em;
     background: beige;
 }
@@ -116,10 +116,18 @@ button[data-color="red"]:hover {
     /*flex: 1 1 300px;*/
 }
 
-@media all and (max-width:480px) {
+@media all and (max-width:460px) {
     #onOff,
     #start,
     #strict {
         flex: 1 1 25%;
     }
+    header,
+    #onOff,
+    #start,
+    #strict,
+    #counter, .btn {
+        font-size: 1em;
+    }
+    
 }
